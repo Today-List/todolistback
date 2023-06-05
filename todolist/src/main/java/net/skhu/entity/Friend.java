@@ -4,21 +4,25 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Data
 @Entity
-public class User {
-
+public class Friend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     int id;
+    int id;
 
-     String email;
+    @ManyToOne
+    @JoinColumn(name = "from_user_id")
+    User fromUser;;
 
-     String nickname;
+    @ManyToOne
+    @JoinColumn(name = "to_user_id")
+    User toUser;
 
-     String password;
+    int areWeFriend;
 
 }
-
