@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Calendar {
+public class Calender {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
