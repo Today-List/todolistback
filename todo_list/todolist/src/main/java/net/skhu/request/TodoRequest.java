@@ -2,9 +2,13 @@ package net.skhu.request;
 
 import java.time.LocalDate;
 
+import lombok.Data;
+
+@Data
 public class TodoRequest {
     private LocalDate date;
     private String task;
+    private int todoId;
 
     public TodoRequest() {
     }
@@ -28,6 +32,9 @@ public class TodoRequest {
 
     public void setTask(String task) {
         this.task = task;
+    }
+    public int getTodoId() {
+        return todoId;
     }
 }
 
