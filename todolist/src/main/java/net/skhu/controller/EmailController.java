@@ -27,6 +27,7 @@ public class EmailController {
     public ResponseEntity<String> mailConfirm(@RequestBody EmailRequest emailRequest) throws Exception{
         String code = emailService.sendSimpleMessage(emailRequest.getEmail());
         session.setAttribute("emailCode", code);
+
         return ResponseEntity.ok("success");
     }
 

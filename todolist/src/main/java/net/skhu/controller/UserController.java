@@ -93,7 +93,7 @@ public class UserController {
     } // 중복이면 true, 아니면 false
 
 
-    @GetMapping("/check-login")
+    @GetMapping("/check-login")//로그인 여부?
     public ResponseEntity<Boolean> checkLogin(@RequestParam String email, @RequestParam String password) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
 
