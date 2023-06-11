@@ -1,5 +1,6 @@
 package net.skhu.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,16 +14,26 @@ import lombok.Data;
 public class Friend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "from_user_id")
-    User fromUser;;
+    private User fromUser;
 
     @ManyToOne
     @JoinColumn(name = "to_user_id")
-    User toUser;
+    private User toUser;
 
-    int areWeFriend;
+    @Column(name = "are_we_friend")
+    private int areWeFriend;
 
+    public void setFromUserId(int fromUserId) {
+        this.fromUser = new User();
+        this.fromUser.setId(fromUserId);
+    }
+
+    public void setToUserId(int toUserId) {
+        this.toUser = new User();
+        this.toUser.setId(toUserId);
+    }
 }

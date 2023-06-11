@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
@@ -45,43 +46,38 @@ public class EmailService {
     // 메일 양식 작성
     public MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
         createCode();
-        String setFrom = "gjwldud0719@naver.com";
-        String toEmail = to;
+        String setFrom = "fr35wo@naver.com";
         String title = "회원가입 인증 번호";
 
         MimeMessage message = emailsender.createMimeMessage();
         message.addRecipients(MimeMessage.RecipientType.TO, to); // 보내는 대상
         message.setSubject(title);
-        message.setFrom(setFrom);
-        String n = "";
-        n += "<div style='margin:100px;'>";
-        n +="<h1> 안녕하세요 TodoRack입니다.</h1>";
-        n +="<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요.<p>";
-        n += "<br>";
-        n += "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        n += "<h3 style='color:#9AC1D1;'>회원가입 인증 코드</h3>";
-        n += "<div style='font-size:130%'>";
-        n += "CODE : <strong>";
-        n += authNum + "</strong><div><br/> "; // 메일에 인증번호 넣기
-        n += "</div>";
+        message.setFrom(new InternetAddress(setFrom, "Your Name", "UTF-8"));
 
-        message.setText(n,"utf-8", "html");
+        String htmlContent = "<div style='margin:100px;'>";
+        htmlContent += "<h1>안녕하세요 TodoRack입니다.</h1>";
+        htmlContent += "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요.</p>";
+        htmlContent += "<br>";
+        htmlContent += "<div align='center' style='border:1px solid black; font-family:verdana'>";
+        htmlContent += "<h3 style='color:#9AC1D1;'>회원가입 인증 코드</h3>";
+        htmlContent += "<div style='font-size:130%'>";
+        htmlContent += "CODE : <strong>" + authNum + "</strong><div><br/>";
+        htmlContent += "</div>";
+
+        message.setContent(htmlContent, "text/html; charset=utf-8");
+
         return message;
     }
 
-
     // 메일 발송
     public String sendSimpleMessage(String to) throws Exception{
-        createCode(); // 랜덤 인증코드 생성
-        MimeMessage message = createMessage(to); // 메일 발송
+        MimeMessage message = createMessage(to);
         try{
             emailsender.send((message));
         } catch(MailException es){
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
-        return authNum; // 메일로 보냈던 인증 코드를 서버로 반환
+        return authNum;
     }
-
-
 }
