@@ -28,7 +28,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'javax.mail:javax.mail-api:1.6.2'
-    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
+   // providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     implementation 'javax.validation:validation-api:2.0.1.Final'
 }
