@@ -5,10 +5,13 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
@@ -20,6 +23,9 @@ import net.skhu.repository.FriendRepository;
 import net.skhu.repository.TodoRepository;
 import net.skhu.repository.UserRepository;
 import net.skhu.request.TodoRequest;
+import net.skhu.response.TodoStatsResponse;
+
+
 @RestController
 public class TodoController {
     private final TodoRepository todoRepository;
@@ -72,7 +78,7 @@ public class TodoController {
         }
     }
 
-        // 해당 유저의 할 일을 데이터베이스에서 삭제하는 코드 작성
+        // 버튼누르면 해당 유저의 할 일을 데이터베이스에서 삭제하는 코드 작성
     @PostMapping("/todo/delete")
     public ResponseEntity<String> deleteTodo(@RequestBody TodoRequest todoRequest, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
@@ -104,7 +110,7 @@ public class TodoController {
     }
 
 
-        // 해당 유저의 할 일을 완료로 표시하는 코드 작성
+        // 버튼누르면 해당 유저의 할 일을 완료로 표시하는 코드 작성
     @PostMapping("/todo/updateStatus")
     public ResponseEntity<String> updateTodoStatus(@RequestBody TodoRequest todoRequest, HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
@@ -143,6 +149,33 @@ public class TodoController {
 
 
         // 특정 날짜와 해당 유저의 저장된 할 일의 개수를 조회하는 코드 작성
+    @GetMapping("/todo/stats")
+    public ResponseEntity<TodoStatsResponse> getTodoStats(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, HttpSession session) {
+        User currentUser = (User) session.getAttribute("user");
+
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        try {
+            // 해당 날짜와 해당 유저의 총 할 일 개수를 가져옵니다.
+            int totalTodoCount = calendarRepository.countByUserIdAndDate(currentUser.getId(), date);
+
+            // 해당 날짜와 해당 유저의 완료된 일 개수를 가져옵니다.
+            int completedTodoCount = calendarRepository.countByUserIdAndDateAndCompleted(currentUser.getId(), date, true);
+
+            // TodoStatsResponse 객체를 생성하여 결과를 담습니다.
+            TodoStatsResponse statsResponse = new TodoStatsResponse();
+            statsResponse.setDate(date);
+            statsResponse.setTotalTodoCount(totalTodoCount);
+            statsResponse.setCompletedTodoCount(completedTodoCount);
+
+            return ResponseEntity.status(HttpStatus.OK).body(statsResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 
         // ...
 
