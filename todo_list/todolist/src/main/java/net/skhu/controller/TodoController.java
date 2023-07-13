@@ -181,6 +181,5 @@ public class TodoController {
 
 
     // 친구와 서로 친구이며, 친구와 나의 완료된 할 일의 개수를 조회하는 코드 작성
-    // github 연동 test
-    //github연동 test2
+    // github 연동 retest
 }
